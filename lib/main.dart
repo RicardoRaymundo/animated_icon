@@ -6,11 +6,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false, //Retira a faixa 'debug' da tela
+      title: 'Animated Icon',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Flutter Animated Icon'),
     );
   }
 }
@@ -24,11 +25,12 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
-  int _counter = 0;
+class _MyHomePageState extends State<MyHomePage>
+    with SingleTickerProviderStateMixin {
   AnimationController _animationController;
   bool isPlaying = false;
 
+  //Definindo as propriedades do controlador de animação
   @override
   void initState() {
     super.initState();
@@ -36,25 +38,20 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
   }
 
+  //Função que descarta o objeto de controle de animação após o encerramento da animação
   @override
   void dispose() {
     super.dispose();
     _animationController.dispose();
   }
 
+  //Função que alterna entre os dois estados dos icones
   void _handleOnPressed() {
     setState(() {
       isPlaying = !isPlaying;
       isPlaying
           ? _animationController.forward()
           : _animationController.reverse();
-    });
-  }
-
-  void _incrementCounter() {
-    setState(() {
-
-      _counter++;
     });
   }
 
@@ -68,13 +65,28 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+            FloatingActionButton(
+              onPressed: _handleOnPressed,
+              tooltip: 'Animated Icon',
+              child: AnimatedIcon(
+                icon: AnimatedIcons.menu_home,
+                progress: _animationController,
+                semanticLabel: 'Show menu',
+              ),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
+            Container(
+              height: 20,
             ),
+            FloatingActionButton(
+              onPressed: _handleOnPressed,
+              tooltip: 'Animated Icon',
+              child: AnimatedIcon(
+                icon: AnimatedIcons.ellipsis_search,
+                progress: _animationController,
+                semanticLabel: 'Show menu',
+              ),
+            ),
+
           ],
         ),
       ),
