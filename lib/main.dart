@@ -26,32 +26,63 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
+
+  //Declarando variáveis de controle de animação dos ícones
   AnimationController _animationController;
   bool isPlaying = false;
 
-  //Definindo as propriedades do controlador de animação
+  AnimationController _ellipsisAnimationController;
+  bool isPlayingEllipsis = false;
+
+  AnimationController _playAnimationController;
+  bool isPlayingPlay = false;
+
+  //Definindo as propriedades dos controladores de animação
   @override
   void initState() {
     super.initState();
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    _ellipsisAnimationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    _playAnimationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 1000));
   }
 
-  //Função que descarta o objeto de controle de animação após o encerramento da animação
+  //Funções que descarta o objeto de controle de animação após o encerramento da animação
   @override
   void dispose() {
     super.dispose();
     _animationController.dispose();
+    _ellipsisAnimationController.dispose();
+    _playAnimationController.dispose();
   }
 
-  //Função que alterna entre os dois estados dos icones
+
+  //Funções que alternam entre os dois estados dos icones
   void _handleOnPressed() {
     setState(() {
       isPlaying = !isPlaying;
       isPlaying
           ? _animationController.forward()
           : _animationController.reverse();
+    });
+  }
+  void _onEllipsisButton() {
+    setState(() {
+      isPlayingEllipsis = !isPlayingEllipsis;
+      isPlayingEllipsis
+          ? _ellipsisAnimationController.forward()
+          : _ellipsisAnimationController.reverse();
+    });
+  }
+  void _onPlayButton() {
+    setState(() {
+      isPlayingPlay = !isPlayingPlay;
+      isPlayingPlay
+          ? _playAnimationController.forward()
+          : _playAnimationController.reverse();
     });
   }
 
@@ -75,14 +106,14 @@ class _MyHomePageState extends State<MyHomePage>
               ),
             ),
             Container(
-              height: 20,
+              height: 30,
             ),
             FloatingActionButton(
-              onPressed: _handleOnPressed,
+              onPressed: _onEllipsisButton,
               tooltip: 'Animated Icon',
               child: AnimatedIcon(
                 icon: AnimatedIcons.ellipsis_search,
-                progress: _animationController,
+                progress: _ellipsisAnimationController,
                 semanticLabel: 'Show menu',
               ),
             ),
@@ -91,11 +122,11 @@ class _MyHomePageState extends State<MyHomePage>
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _handleOnPressed,
+        onPressed: _onPlayButton,
         tooltip: 'Animated Icon',
         child: AnimatedIcon(
           icon: AnimatedIcons.play_pause,
-          progress: _animationController,
+          progress: _playAnimationController,
           semanticLabel: 'Show menu',
         ),
       ),
